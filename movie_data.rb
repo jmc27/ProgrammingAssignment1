@@ -1,6 +1,8 @@
 
+#MovieData class
 class MovieData
 	attr_accessor :filename, :data
+	#loads data from a file and sets globals
 	def load_data(filename)
 		@filename = filename
 		@data = {}
@@ -8,7 +10,9 @@ class MovieData
 			line = line.split '\t'
 			@data[line.first.to_s] = line.last.to_s
 		end
+	
 	end
+
 	#print each element
 	def data_to_s
 		@data.each { |a| puts a}
@@ -19,4 +23,5 @@ end
 #test
 data = MovieData.new()
 data.load_data("u.data")
-data.data_to_s
+puts data.data
+puts data.data.length
