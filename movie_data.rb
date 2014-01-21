@@ -41,13 +41,37 @@ class MovieData
 		movie_list = @moviedata.keys
 		movie_list.sort_by{ |key| [@moviedata[key][1], @moviedata[key][0]] }
 	end
+
+	#similarity between users is determined by comparing the difference in ratings
+	#of movies that both users rated
+	def similarity(user1, user2)
+		if @userdata.has_key? user1.to_s.to_sym and @userdata.has_key? user2.to_s.to_sym
+
+			sim_rating = 0
+			user1ratings = @userdata[user1.to_s.to_sym]
+			user2ratings = @userdata[user2.to_s.to_sym]
+			user2ids = []
+			user2ratings.each{ |id, rating| user2ids.push id }
+			user1ratings.each{ |id, rating| sim_rating += 5 - (rating - user2ratings[user2ids.index id][1]).abs if user2ids.include? id}
+					return sim_rating
+		else
+			puts "User not found"
+			return nil
+		end
+	end
+	#return a list of users most similar to u
+	def most_similar(u)
+		userlist = @userdata.keys
+		userlist.sort_by{ |id| [similarity(u, id)] }.reverse.drop(1)
+	end
 end
 
 
 #test
 data = MovieData.new()
 data.load_data("u.data")
-puts data.popularitylist.first
-puts data.popularity(1566)
-
+#puts data.popularitylist.first(50)
+#puts data.popularity(1566)
+puts data.similarity(10,100)
+puts data.most_similar(100).first(5)
 
